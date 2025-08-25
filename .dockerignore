@@ -1,0 +1,44 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Taskipy or Poetry cache
+.taskipy_cache/
+poetry.lock
+*.egg-info/
+dist/
+build/
+
+# OS / Editor metadata
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+
+# IDEs
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Env vars and secrets
+.env
+.env.*
+
+# Logs
+*.log
+
+# Docker itself
+Dockerfile
+docker-compose.yml
