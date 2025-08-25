@@ -169,8 +169,7 @@ def agg_tasks(state: OverallState):
     if updates:
         c = Command(goto=[Send("process_update", {"update": u}) for u in updates])
     else:
-        goto=END
-        c= Command(goto=goto)
+        c= Command(goto=END)
     return c
 
 async def process_update(state: UpdateState, config: RunnableConfig):
