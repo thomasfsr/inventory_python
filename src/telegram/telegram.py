@@ -22,7 +22,7 @@ from src.client.utils_httpx import login
 import asyncio
 from dotenv import load_dotenv
 load_dotenv()
-BOT_TOKEN = os.getenv("WISECOLLECT_BOT")
+BOT_TOKEN = os.getenv("WISECOLLECT_BOT_TOKEN")
 BACKEND_URL = os.getenv("BACKEND_URL")
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 DATABASE_URL = os.getenv('DATABASE_URL')

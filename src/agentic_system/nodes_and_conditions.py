@@ -53,7 +53,7 @@ db_handler = DatabaseHandler()
 async def handle_update(task_description:str, user_id:Union[str, UUID] ,**kwargs):
     system = update_system
     human = f'TASK: {task_description}'
-    response = await struct_output_call(system=system, human=human, llm=gpt, basemodel=UpdateBaseModel)
+    response = await struct_output_call(system=system, human=human, llm=l70b, basemodel=UpdateBaseModel)
     update = response['parsed']
     tokens = response['raw'].usage_metadata['total_tokens']
     await db_handler.add_total_tokens(user_id=user_id, n_tokens=tokens)
@@ -62,14 +62,14 @@ async def handle_update(task_description:str, user_id:Union[str, UUID] ,**kwargs
 async def handle_query(task_description:str, user_id:Union[str, UUID] , **kwargs):
     system = query_system.format(user_id=user_id)
     human = f'TASK: {task_description}'
-    response = await struct_output_call(system=system, human=human, llm=gpt, basemodel=SQLQueryBaseModel)
+    response = await struct_output_call(system=system, human=human, llm=l70b, basemodel=SQLQueryBaseModel)
     query = response['parsed']
     tokens = response['raw'].usage_metadata['total_tokens']
     await db_handler.add_total_tokens(user_id=user_id, n_tokens=tokens)
     query_result = await db_handler.query(query.query)
     treated_answer = await llm_chain_call(system=treat_query_system, 
                                     human=f'Tarefa requisitada: {task_description}, comando SQL executado:{query.query} e resultado da query: {str(query_result)}', 
-                                    llm=gpt)
+                                    llm=l70b)
     treated_answer.role = "assistant"
     await db_handler.add_total_tokens(user_id=user_id, n_tokens=treated_answer.usage_metadata['total_tokens'])
     return {'messages':[treated_answer], 'sql_queries':[query],'sql_results':[query_result]}
@@ -78,8 +78,8 @@ async def handle_chatting(task_description:str, chat_history:str, user_id:Union[
     user_name = await db_handler.user_name(user_id)
     system = chatting_system.format(chat_history=chat_history)
     human = f'user {user_name} message: {task_description}'
-    chat_answer = await llm_chain_call(system=system, human=human, llm=gpt)
-    db_handler.add_total_tokens(user_id=user_id, n_tokens=chat_answer.usage_metadata['total_tokens'])
+    chat_answer = await llm_chain_call(system=system, human=human, llm=l70b)
+    await db_handler.add_total_tokens(user_id=user_id, n_tokens=chat_answer.usage_metadata['total_tokens'])
     chat_answer.role = "assistant"
     return {'messages':[chat_answer]}
 

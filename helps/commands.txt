@@ -1,0 +1,5 @@
+st = "python -m streamlit run src/frontend/all_one_page.py"
+api = "python -m fastapi run src/api/api_app.py"
+tl = "python -m src.telegram.inventory_bot_aio"
+build_db = "python -m src.database.models"
+all = "bash run_all.sh"

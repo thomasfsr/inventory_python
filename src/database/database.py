@@ -40,7 +40,7 @@ async def create_user(first_name, last_name, email, password, telegram_id):
         telegram_id = int(telegram_id),
         is_active=True
     )
-    async with get_async_session(url=url) as session:
+    async with get_async_session() as session:
         session.add(user)
         await session.commit()
 
