@@ -44,13 +44,13 @@ async def get_session():
     finally:
         await session.close()
 
-start_router = Router(name = __name__)
+router = Router(name = __name__)
 class LoginStates(StatesGroup):
     is_registered = State()
     waiting_for_email = State()
     waiting_for_password = State()
 
-@start_router.message(CommandStart())
+@router.message(CommandStart())
 async def start(message: Message, state: FSMContext):
     await state.set_state(LoginStates.is_registered)
 
@@ -86,21 +86,21 @@ async def start(message: Message, state: FSMContext):
                 resize_keyboard=False
                 ))
 
-@start_router.message(LoginStates.is_registered, F.text.casefold() == "sim")
+@router.message(LoginStates.is_registered, F.text.casefold() == "sim")
 async def process_is_registered(message: Message, state: FSMContext):
     await message.reply("Redirecionando para o login...", reply_markup=ReplyKeyboardRemove())
     await process_login(message, state)
 
-@start_router.message(LoginStates.is_registered, F.text.casefold() == "não")
+@router.message(LoginStates.is_registered, F.text.casefold() == "não")
 async def process_is_not_registered(message: Message):
     await message.answer(f"Por favor, registre-se no nosso site: {FRONTEND_URL}/register", reply_markup=ReplyKeyboardRemove())
 
-@start_router.message(Command("login"))
+@router.message(Command("login"))
 async def process_login(message: Message, state: FSMContext):
     await message.answer("Olá! Para começar, por favor, me informe seu e-mail ou /exit para sair:")
     await state.set_state(LoginStates.waiting_for_email)
 
-@start_router.message(Command("exit"))
+@router.message(Command("exit"))
 async def exit_login(message: Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state in [LoginStates.waiting_for_email, LoginStates.waiting_for_password]:
@@ -109,13 +109,13 @@ async def exit_login(message: Message, state: FSMContext):
     else:
         await message.answer("Nenhum processo de login ativo.")
 
-@start_router.message(LoginStates.waiting_for_email)
+@router.message(LoginStates.waiting_for_email)
 async def process_email(message: Message, state: FSMContext):
     await state.update_data(email=message.text)
     await message.answer("Agora digite sua senha:")
     await state.set_state(LoginStates.waiting_for_password)
 
-@start_router.message(LoginStates.waiting_for_password)
+@router.message(LoginStates.waiting_for_password)
 async def process_password(message: Message, state: FSMContext):
     user_data = await state.get_data()
     email = user_data['email']
@@ -139,7 +139,7 @@ async def process_password(message: Message, state: FSMContext):
     await state.clear()
 
 
-@start_router.message(Command("app"))
+@router.message(Command("app"))
 async def process_login(message: Message):
     telegram_user_id = message.from_user.id
 
@@ -151,7 +151,7 @@ async def process_login(message: Message):
         disable_web_page_preview=True
     )
 
-@start_router.message()
+@router.message()
 async def respond(message: Message, state: FSMContext):
     now = datetime.now()
     current_month = now.month
@@ -201,7 +201,7 @@ async def respond(message: Message, state: FSMContext):
 async def main():
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
-    dp.include_router(start_router)
+    dp.include_router(router)
 
     print("BOT RUNNING")
     await dp.start_polling(bot)
