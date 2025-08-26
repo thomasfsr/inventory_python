@@ -1,5 +1,4 @@
 from contextlib import asynccontextmanager
-import httpx
 import os
 
 from datetime import datetime
@@ -61,9 +60,12 @@ async def start(message: Message, state: FSMContext):
 
     async with get_session() as session:
         user = await session.scalar(select(User).where(User.id == user_id))
-        user.telegram_id = telegram_user_id
-        is_act = user.is_active
-        await session.commit()
+        if user:
+            user.telegram_id = telegram_user_id
+            is_act = user.is_active
+            await session.commit()
+        else:
+            pass
 
     if user:
         await message.answer("Você já está logado.")
