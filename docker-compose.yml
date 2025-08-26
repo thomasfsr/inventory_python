@@ -13,6 +13,19 @@ services:
     restart: unless-stopped
     networks:
       - app_network
+  telegram:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: telegram_bot
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - app_network
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@inventory_database:5432/${POSTGRES_DB}
+
 
 volumes:
   pgdata:
