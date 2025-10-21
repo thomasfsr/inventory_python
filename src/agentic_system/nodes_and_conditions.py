@@ -10,6 +10,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.types import Send, Command
 
 from langchain_core.messages import AIMessage, HumanMessage
+from sqlalchemy.util import ellipses_string
 
 from src.agentic_system.basemodels import *
 from src.agentic_system.utils_async import (DatabaseHandler, llm_chain_call, 
@@ -18,32 +19,32 @@ from src.agentic_system.portuguese_prompts import *
 from src.agentic_system.states import *
 
 from dotenv import load_dotenv
-load_dotenv()
+_ = load_dotenv()
 import os
 
-mix_name = os.getenv("MIXTRAL")
+mix_name : str = os.getenv("MIXTRAL", "")
 l70_name = os.getenv("LLAMA3_70B")
 l8_name = os.getenv("LLAMA3_8B")
 gemma_name = os.getenv("GEMMA2")
 
 mix = ChatGroq(temperature=0, 
                    model = mix_name, 
-                   api_key= os.getenv('GROQ_KEY'),
+               api_key = os.getenv('GROQ_KEY', "") # type: ignore
                    )
 l70b = ChatGroq(temperature=0, 
                    model = l70_name, 
-                   api_key= os.getenv('GROQ_KEY'),
+                   api_key= os.getenv('GROQ_KEY', ""),
                    )
 l8b = ChatGroq(temperature=0, 
                    model = l8_name, 
-                   api_key= os.getenv('GROQ_KEY'),
+                   api_key= os.getenv('GROQ_KEY', ""),
                    )
 gemma = ChatGroq(temperature=0, 
                    model = gemma_name, 
-                   api_key= os.getenv('GROQ_KEY'),
+                   api_key= os.getenv('GROQ_KEY', ""),
                    )
 gpt = ChatOpenAI(temperature=0,
-                 api_key= os.getenv('OPENAI_KEY'),
+                 api_key= os.getenv('OPENAI_KEY', ""),
                  verbose=True,
                  model='gpt-4o-mini'
                  )
