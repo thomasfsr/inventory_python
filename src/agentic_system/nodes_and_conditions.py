@@ -22,36 +22,36 @@ from dotenv import load_dotenv
 _ = load_dotenv()
 import os
 
-mix_name : str = os.getenv("MIXTRAL", "")
-l70_name = os.getenv("LLAMA3_70B")
-l8_name = os.getenv("LLAMA3_8B")
-gemma_name = os.getenv("GEMMA2")
+mixtral_name : str = os.getenv("MIXTRAL", "")
+l70_name = os.getenv("LLAMA3_70B", "")
+l8_name = os.getenv("LLAMA3_8B", "")
+gemma_name = os.getenv("GEMMA2", "")
 
 mix = ChatGroq(temperature=0, 
-                   model = mix_name, 
-               api_key = os.getenv('GROQ_KEY', "") # type: ignore
-                   )
+                   model = mixtral_name, 
+               api_key = os.getenv('GROQ_KEY', "")  # pyright: ignore[reportArgumentType]
+               )
 l70b = ChatGroq(temperature=0, 
                    model = l70_name, 
-                   api_key= os.getenv('GROQ_KEY', ""),
+                   api_key= os.getenv('GROQ_KEY', ""),  # pyright: ignore[reportArgumentType]
                    )
 l8b = ChatGroq(temperature=0, 
                    model = l8_name, 
-                   api_key= os.getenv('GROQ_KEY', ""),
+                   api_key= os.getenv('GROQ_KEY', ""),  # pyright: ignore[reportArgumentType]
                    )
 gemma = ChatGroq(temperature=0, 
                    model = gemma_name, 
-                   api_key= os.getenv('GROQ_KEY', ""),
+                   api_key= os.getenv('GROQ_KEY', ""),  # pyright: ignore[reportArgumentType]
                    )
 gpt = ChatOpenAI(temperature=0,
-                 api_key= os.getenv('OPENAI_KEY', ""),
+                 api_key= os.getenv('OPENAI_KEY', ""),  # pyright: ignore[reportArgumentType]
                  verbose=True,
                  model='gpt-4o-mini'
                  )
 db_handler = DatabaseHandler()
 
 # Handlers:
-async def handle_update(task_description:str, user_id:Union[str, UUID] ,**kwargs):
+async def handle_update(task_description:str, user_id:str | UUID):
     system = update_system
     human = f'TASK: {task_description}'
     response = await struct_output_call(system=system, human=human, llm=l70b, basemodel=UpdateBaseModel)
