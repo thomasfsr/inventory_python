@@ -1,6 +1,5 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 from enum import Enum
-from typing import Optional, Union, List
 
 class TaskOptions(Enum):
     CHATTING = 'chatting'
@@ -12,7 +11,7 @@ class TaskModel(BaseModel):
     task: str
 
 class ListTaskModel(BaseModel):
-    task_list: List[TaskModel]
+    task_list: list[TaskModel]
 
 class ActionOptions(str,Enum):
     ADD = 'add'
@@ -71,12 +70,12 @@ class ListOfTasksBaseModel(BaseModel):
     tasks:list[FilteredTaskBaseModel]= Field(description='''The list of tasks identified.''')
 
 class UpdateBaseModel(BaseModel):
-    action: Optional[ActionOptions] = Field(description='Action required for the task: add, subtract, discard')
+    action: None | ActionOptions = Field(description='Action required for the task: add, subtract, discard')
     item_name: str = Field(description='Item of the task')
-    quantity: Optional[Union[float, int]] = Field(description='Quantity of the item in the task')
+    quantity: None | float | int = Field(description='Quantity of the item in the task')
     unit: UnitOptions = Field(description='unit of the items quantity.')
-    old_item_name: Optional[str] | None 
-    new_item_name: Optional[str] | None 
-    category: Optional[str] | None = Field(description='Category of the item')
-    description: Optional[str] | None = Field(description='Description of the item')
-    location: Optional[str] | None = Field(description='Location of the item')
+    old_item_name:  str | None 
+    new_item_name:  str | None 
+    category: str | None = Field(description='Category of the item')
+    description: str | None = Field(description='Description of the item')
+    location: str | None = Field(description='Location of the item')
