@@ -1,4 +1,4 @@
-from typing import TypedDict, List, Annotated
+from typing import TypedDict, List, Annotated, Union
 from langchain_core.messages import AnyMessage
 from src.agentic_system.basemodels import *
 
