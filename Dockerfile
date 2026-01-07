@@ -16,4 +16,5 @@ WORKDIR /app
 COPY . . 
 COPY --from=builder /app/.venv .venv
 ENV PATH="/app/.venv/bin:$PATH"
-CMD ["python", "-m", "src.telegram.telegram"]
+# CMD ["python", "-m", "src.telegram.telegram"]
+CMD ["sh", "-c", "python -m src.database.database && python -m src.telegram.telegram"]
